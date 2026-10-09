@@ -26,16 +26,13 @@ var Input = {
     this._ku = function (e) { self.keys[e.code] = false; };
     window.addEventListener('keydown', this._kd);
     window.addEventListener('keyup', this._ku);
-    this._mm = function (e) {
+    canvas.addEventListener('mousemove', function (e) {
       var r = canvas.getBoundingClientRect();
       self.mouse.x = e.clientX - r.left; self.mouse.y = e.clientY - r.top;
-    };
-    this._md = function (e) { if (e.button === 0) self.mouse.down = true; };
-    this._mu = function () { self.mouse.down = false; };
-    canvas.addEventListener('mousemove', this._mm);
-    canvas.addEventListener('mousedown', this._md);
-    window.addEventListener('mouseup', this._mu);
-    this._ts = function (e) {
+    });
+    canvas.addEventListener('mousedown', function (e) { if (e.button === 0) self.mouse.down = true; });
+    window.addEventListener('mouseup', function () { self.mouse.down = false; });
+    canvas.addEventListener('touchstart', function (e) {
       e.preventDefault();
       for (var i = 0; i < e.changedTouches.length; i++) {
         var t = e.changedTouches[i], r = canvas.getBoundingClientRect();
@@ -47,8 +44,8 @@ var Input = {
           self.mouse.x = x; self.mouse.y = y;
         }
       }
-    };
-    this._tm = function (e) {
+    }, { passive: false });
+    canvas.addEventListener('touchmove', function (e) {
       e.preventDefault();
       for (var i = 0; i < e.changedTouches.length; i++) {
         var t = e.changedTouches[i], r = canvas.getBoundingClientRect();
@@ -56,38 +53,23 @@ var Input = {
         if (t.identifier === self.touchMove.id) { self.touchMove.x = x; self.touchMove.y = y; }
         else if (t.identifier === self.touchAim.id) { self.touchAim.x = x; self.touchAim.y = y; self.mouse.x = x; self.mouse.y = y; }
       }
-    };
-    this._te = function (e) {
+    }, { passive: false });
+    var end = function (e) {
       for (var i = 0; i < e.changedTouches.length; i++) {
         var t = e.changedTouches[i];
         if (t.identifier === self.touchMove.id) self.touchMove.id = -1;
         if (t.identifier === self.touchAim.id) { self.touchAim.id = -1; self.touchAim.active = false; }
       }
     };
-    canvas.addEventListener('touchstart', this._ts, { passive: false });
-    canvas.addEventListener('touchmove', this._tm, { passive: false });
-    canvas.addEventListener('touchend', this._te);
-    canvas.addEventListener('touchcancel', this._te);
+    canvas.addEventListener('touchend', end); canvas.addEventListener('touchcancel', end);
     this._canvas = canvas;
   },
   unbind: function () {
     window.removeEventListener('keydown', this._kd);
     window.removeEventListener('keyup', this._ku);
-    window.removeEventListener('mouseup', this._mu);
     var c = this._canvas;
-    if (c) {
-      c.removeEventListener('mousemove', this._mm);
-      c.removeEventListener('mousedown', this._md);
-      c.removeEventListener('touchstart', this._ts);
-      c.removeEventListener('touchmove', this._tm);
-      c.removeEventListener('touchend', this._te);
-      c.removeEventListener('touchcancel', this._te);
-    }
+    if (c) { c.innerHTML = ''; }
     this._canvas = null;
-    this.keys = {}; this.pressed = {};
-    this.mouse.down = false;
-    this.touchMove.id = -1;
-    this.touchAim.id = -1; this.touchAim.active = false;
   },
   axis: function () {
     var x = (this.keys['KeyD'] ? 1 : 0) - (this.keys['KeyA'] ? 1 : 0);
@@ -200,8 +182,7 @@ var Fx = {
 };
 
 var Engine = {
-  step: 1 / 60, acc: 0, last: 0,
-  reset: function () { this.acc = 0; this.last = 0; },
+  step: 1 / 60, acc: 0,
   advance: function (ts, update, render) {
     var dt = Math.min(0.1, (ts - (this.last || ts)) / 1000);
     this.last = ts;

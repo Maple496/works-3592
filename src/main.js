@@ -1,7 +1,6 @@
-var canvas = null, g = null, raf = 0, running = false;
+var canvas = null, g = null, raf = 0;
 
 function loop(ts) {
-  if (!running) return;
   Engine.advance(ts, function (dt) { Game.update(dt); }, function () {
     if (g && canvas) Game.render(g, canvas.width, canvas.height);
   });
@@ -21,14 +20,11 @@ function mount(ctx) {
     canvas.style.width = b.w + 'px'; canvas.style.height = b.h + 'px';
   });
   Input.bind(canvas);
-  Engine.reset();
   Game.init();
-  running = true;
   raf = requestAnimationFrame(loop);
 }
 
 function destroy() {
-  running = false;
   if (raf) cancelAnimationFrame(raf);
   raf = 0;
   Input.unbind();
