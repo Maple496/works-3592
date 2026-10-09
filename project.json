@@ -7,15 +7,15 @@
   "files": [
     {
       "path": "src/engine.js",
-      "role": "全局注册表Work、输入、定点步进循环驱动、相机震动、粒子池、Web Audio合成器"
+      "role": ""
     },
     {
       "path": "src/game.js",
-      "role": "地牢生成、玩家、武器/敌人/Boss数据、战斗、掉落与商店、小地图与HUD渲染"
+      "role": ""
     },
     {
       "path": "src/main.js",
-      "role": "入口：画布挂载、固定步长主循环、输入绑定、销毁清理"
+      "role": ""
     }
   ],
   "generated_by": "proj_forge（AI 工程工坊）"
