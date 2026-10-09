@@ -33,3 +33,4 @@ function destroy() {
 }
 
 Work.register({ name: '弹壳地牢', mount: mount, destroy: destroy });
+
