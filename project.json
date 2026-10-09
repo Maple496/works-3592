@@ -1,6 +1,6 @@
 {
   "name": "弹壳地牢",
-  "brief": "双摇杆地牢射击",
+  "brief": "双摇杆俯视角Roguelike地牢射击，单文件可玩垂直切片。",
   "work_ref": "WORKS-3592",
   "entry": "src/main.js",
   "status": "wip",

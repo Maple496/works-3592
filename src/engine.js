@@ -1,16 +1,3 @@
-var Work = (function () {
-  var current = null;
-  return {
-    register: function (mod) {
-      if (!mod || typeof mod.mount !== 'function') {
-        throw new Error('Work.register: {mount} 未声明');
-      }
-      current = mod;
-    },
-    get: function () { return current; }
-  };
-})();
-
 var Input = {
   keys: {}, pressed: {},
   mouse: { x: 0, y: 0, down: false },
@@ -191,4 +178,3 @@ var Engine = {
     render();
   }
 };
-
